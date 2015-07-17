@@ -818,10 +818,6 @@ void t_haxe_generator::generate_haxe_struct_reader(ofstream& out, t_struct* tstr
   const vector<t_field*>& fields = tstruct->get_members();
   vector<t_field*>::const_iterator f_iter;
 
-  indent(out) << "iprot.IncrementRecursionDepth();" << endl;
-  indent(out) << "try" << endl;
-  scope_up(out);
-
   // Declare stack tmp variables and read struct header
   out << indent() << "var field : TField;" << endl << indent() << "iprot.readStructBegin();"
       << endl;
@@ -872,14 +868,6 @@ void t_haxe_generator::generate_haxe_struct_reader(ofstream& out, t_struct* tstr
   scope_down(out);
 
   out << indent() << "iprot.readStructEnd();" << endl << endl;
-
-  indent(out) << "iprot.DecrementRecursionDepth();" << endl;
-  scope_down(out);
-  indent(out) << "catch(e:Dynamic)" << endl;
-  scope_up(out);
-  indent(out) << "iprot.DecrementRecursionDepth();" << endl;
-  indent(out) << "throw e;" << endl;
-  scope_down(out);
 
   // check for required fields of primitive type
   // (which can be checked here but not in the general validate method)
@@ -964,10 +952,7 @@ void t_haxe_generator::generate_haxe_struct_writer(ofstream& out, t_struct* tstr
   vector<t_field*>::const_iterator f_iter;
 
   // performs various checks (e.g. check that all required fields are set)
-  indent(out) << "validate();" << endl;
-  indent(out) << "oprot.IncrementRecursionDepth();" << endl;
-  indent(out) << "try" << endl;
-  scope_up(out);
+  indent(out) << "validate();" << endl << endl;
 
   indent(out) << "oprot.writeStructBegin(STRUCT_DESC);" << endl;
 
@@ -992,18 +977,10 @@ void t_haxe_generator::generate_haxe_struct_writer(ofstream& out, t_struct* tstr
       indent(out) << "}" << endl;
     }
   }
-  
-  indent(out) << "oprot.writeFieldStop();" << endl;
-  indent(out) << "oprot.writeStructEnd();" << endl;
-  
-  indent(out) << "oprot.DecrementRecursionDepth();" << endl;
-  scope_down(out);
-  indent(out) << "catch(e:Dynamic)" << endl;
-  scope_up(out);
-  indent(out) << "oprot.DecrementRecursionDepth();" << endl;
-  indent(out) << "throw e;" << endl;
-  scope_down(out);
-  
+  // Write the struct map
+  out << indent() << "oprot.writeFieldStop();" << endl << indent() << "oprot.writeStructEnd();"
+      << endl;
+
   indent_down();
   out << indent() << "}" << endl << endl;
 }
@@ -1024,10 +1001,6 @@ void t_haxe_generator::generate_haxe_struct_result_writer(ofstream& out, t_struc
   const vector<t_field*>& fields = tstruct->get_sorted_members();
   vector<t_field*>::const_iterator f_iter;
 
-  indent(out) << "oprot.IncrementRecursionDepth();" << endl;
-  indent(out) << "try" << endl;
-  scope_up(out);
-  
   indent(out) << "oprot.writeStructBegin(STRUCT_DESC);" << endl;
 
   bool first = true;
@@ -1055,19 +1028,10 @@ void t_haxe_generator::generate_haxe_struct_result_writer(ofstream& out, t_struc
     indent_down();
     indent(out) << "}";
   }
-  
-  indent(out) << endl;
-  indent(out) << "oprot.writeFieldStop();" << endl;
-  indent(out) << "oprot.writeStructEnd();" << endl;
-  
-  indent(out) << "oprot.DecrementRecursionDepth();" << endl;
-  scope_down(out);
-  indent(out) << "catch(e:Dynamic)" << endl;
-  scope_up(out);
-  indent(out) << "oprot.DecrementRecursionDepth();" << endl;
-  indent(out) << "throw e;" << endl;
-  scope_down(out);
-  
+  // Write the struct map
+  out << endl << indent() << "oprot.writeFieldStop();" << endl << indent()
+      << "oprot.writeStructEnd();" << endl;
+
   indent_down();
   out << indent() << "}" << endl << endl;
 }

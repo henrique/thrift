@@ -55,7 +55,6 @@ public:
     out_dir_base_ = "gen-erl";
 
     legacy_names_ = (parsed_options.find("legacynames") != parsed_options.end());
-    maps_ = (parsed_options.find("maps") != parsed_options.end());
   }
 
   /**
@@ -152,9 +151,6 @@ private:
 
   /* if true retain pre 0.9.2 naming scheme for functions, atoms and consts */
   bool legacy_names_;
-
-  /* if true use maps instead of dicts in generated code */
-  bool maps_;
 
   /**
    * add function to export list
@@ -434,11 +430,7 @@ string t_erl_generator::render_const_value(t_type* type, t_const_value* value) {
     t_type* ktype = ((t_map*)type)->get_key_type();
     t_type* vtype = ((t_map*)type)->get_val_type();
 
-    if (maps_) {
-      out << "maps:from_list([";
-    } else {
-      out << "dict:from_list([";
-    }
+    out << "dict:from_list([";
     map<t_const_value*, t_const_value*>::const_iterator i, end = value->get_map().end();
     for (i = value->get_map().begin(); i != end;) {
       out << "{" << render_const_value(ktype, i->first) << ","
@@ -487,11 +479,7 @@ string t_erl_generator::render_default_value(t_field* field) {
   if (type->is_struct() || type->is_xception()) {
     return "#" + atomify(type->get_name()) + "{}";
   } else if (type->is_map()) {
-    if (maps_) {
-      return "#{}";
-    } else {
-      return "dict:new()";
-    }
+    return "dict:new()";
   } else if (type->is_set()) {
     return "sets:new()";
   } else if (type->is_list()) {
@@ -525,13 +513,9 @@ string t_erl_generator::render_member_type(t_field* field) {
   } else if (type->is_struct() || type->is_xception()) {
     return atomify(type->get_name()) + "()";
   } else if (type->is_map()) {
-    if (maps_) {
-      return "#{}";
-    } else {
-      return "dict:dict()";
-    }
+    return "dict()";
   } else if (type->is_set()) {
-    return "sets:set()";
+    return "set()";
   } else if (type->is_list()) {
     return "list()";
   } else {
@@ -1026,5 +1010,4 @@ std::string t_erl_generator::type_module(t_type* ttype) {
 THRIFT_REGISTER_GENERATOR(
     erl,
     "Erlang",
-    "    legacynames: Output files retain naming conventions of Thrift 0.9.1 and earlier.\n"
-    "    maps:        Generate maps instead of dicts.\n")
+    "    legacynames: Output files retain naming conventions of Thrift 0.9.1 and earlier.\n")

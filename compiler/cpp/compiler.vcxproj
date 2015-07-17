@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\audit\t_audit.h" />
     <ClInclude Include="src\generate\t_generator.h" />
     <ClInclude Include="src\generate\t_generator_registry.h" />
     <ClInclude Include="src\generate\t_oop_generator.h" />
@@ -51,7 +50,6 @@
     <ClInclude Include="src\windows\version.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\audit\t_audit.cpp"/>
     <ClCompile Include="src\generate\t_as3_generator.cc" />
     <ClCompile Include="src\generate\t_cocoa_generator.cc" />
     <ClCompile Include="src\generate\t_cpp_generator.cc" />

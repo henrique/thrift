@@ -106,7 +106,7 @@ class TestServer
         }
         catch (x : TException)
         {
-			trace('$x ${x.errorID} ${x.errorMsg}');
+            trace('$x');
         }
         catch (x : Dynamic)
         {
