@@ -105,7 +105,7 @@ class TSimpleServer extends TServer  {
             }
             catch( pex : TProtocolException)
             {
-                logDelegate('$pex ${pex.errorID} ${pex.errorMsg}'); // Unexpected
+                logDelegate(pex); // Unexpected
             }
             catch( e : Dynamic)
             {
