@@ -33,7 +33,7 @@ sudo update-java-alternatives -s java-1.7.0-openjdk-amd64
 sudo apt-get install -qq python-all python-all-dev python-all-dbg python-setuptools python-support
 
 # Ruby dependencies
-sudo apt-get install -qq ruby ruby-dev
+sudo apt-get install -qq ruby1.9.1-dev
 sudo gem install bundler rake
 
 # Perl dependencies
